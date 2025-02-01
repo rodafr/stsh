@@ -31,3 +31,31 @@ func TestClauseParserAndFormatter(t *testing.T) {
 	}
 	fmt.Printf("claude says \n%s\n", md)
 }
+
+func TestClaudeFormatter(t *testing.T) {
+	s := &stsh{
+		header:  "test stsh header",
+		comment: "test stsh comment",
+		sols: []solution{
+			{
+				header: "test sol header",
+				feats: []feature{
+					{
+						header: "test feat header",
+						cmds: []command{
+							{
+								header: "test cmd header",
+								desc:   "test cmd desc",
+								cmd:    "ping 127.0.0.1",
+								tags: []string{
+									"ping", "test",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+	fmt.Print(FormatToString(s))
+}
