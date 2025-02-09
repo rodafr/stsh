@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	stashfile string = "cmd.stsh"
+	spellbook string = "splbk.md"
 )
 
 func main() {
