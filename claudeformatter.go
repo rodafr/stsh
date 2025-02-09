@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"strings"
@@ -13,6 +14,8 @@ func Format(w io.Writer, s *stsh) error {
 		if _, err := fmt.Fprintf(w, "# %s\n\n", s.header); err != nil {
 			return err
 		}
+	} else {
+		return errors.New("empty header line")
 	}
 
 	// Write comment if exists
@@ -20,25 +23,49 @@ func Format(w io.Writer, s *stsh) error {
 		if _, err := fmt.Fprintf(w, "> %s\n\n", s.comment); err != nil {
 			return err
 		}
+	} else {
+		return errors.New("empty comment field")
+	}
+
+	if len(s.sols) == 0 {
+		return errors.New("no h2 found")
 	}
 
 	// Write each solution
 	for _, sol := range s.sols {
-		if _, err := fmt.Fprintf(w, "## %s\n\n", sol.header); err != nil {
-			return err
-		}
-
-		// Write features
-		for _, feat := range sol.feats {
-			if _, err := fmt.Fprintf(w, "### %s\n\n", feat.header); err != nil {
+		if sol.header != "" {
+			if _, err := fmt.Fprintf(w, "## %s\n\n", sol.header); err != nil {
 				return err
 			}
+		} else {
+			return errors.New("empty solution header line")
+		}
 
+		if len(sol.feats) == 0 {
+			return errors.New("no h3 found")
+		}
+		// Write features
+		for _, feat := range sol.feats {
+			if feat.header != "" {
+				if _, err := fmt.Fprintf(w, "### %s\n\n", feat.header); err != nil {
+					return err
+				}
+			} else {
+				return errors.New("empty feature header line")
+			}
+
+			if len(feat.cmds) == 0 {
+				return errors.New("no h4 found")
+			}
 			// Write commands
 			for _, cmd := range feat.cmds {
 				// Command header
-				if _, err := fmt.Fprintf(w, "#### %s\n\n", cmd.header); err != nil {
-					return err
+				if cmd.header != "" {
+					if _, err := fmt.Fprintf(w, "#### %s\n\n", cmd.header); err != nil {
+						return err
+					}
+				} else {
+					return errors.New("empty command header line")
 				}
 
 				// Command description
@@ -46,6 +73,8 @@ func Format(w io.Writer, s *stsh) error {
 					if _, err := fmt.Fprintf(w, "%s\n\n", cmd.desc); err != nil {
 						return err
 					}
+				} else {
+					return errors.New("empty command description")
 				}
 
 				// Command code block
@@ -53,6 +82,8 @@ func Format(w io.Writer, s *stsh) error {
 					if _, err := fmt.Fprintf(w, "```sh\n%s\n```\n\n", cmd.cmd); err != nil {
 						return err
 					}
+				} else {
+					return errors.New("empty command code block")
 				}
 
 				// Command tags
