@@ -17,3 +17,8 @@
   - [ ] worry about merge conflicts later
 - [ ] tag system for sorting/finding commands (with #)
 - [ ] TUI for browsing cmds
+
+- [ ] rename to SPELLBOOK / splbk
+- [ ] one Spellbook file per repo
+- [ ] rename headings
+- [ ] make the format more flexible?

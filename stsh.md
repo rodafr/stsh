@@ -1,6 +1,6 @@
-# cmd stsh
+# Spellbook
 
-> Command stash for team X
+> Spells for team X's Something Service
 
 ## Solution A
 
